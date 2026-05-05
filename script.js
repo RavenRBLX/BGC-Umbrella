@@ -38,6 +38,8 @@ async function searchUser() {
     }
 
     const userId = userData.data[0].id;
+    const userInfo = await getUserInfo(userId);
+const accountAge = calculateAccountAge(userInfo.created);
 
     // Get avatar
     const avatarRes = await fetch(
@@ -57,8 +59,10 @@ async function searchUser() {
       <div class="card">
         <h2>${username}</h2>
         <img src="${avatarUrl}" alt="avatar">
-        <p><strong>User ID:</strong> ${userId}</p>
-        <p><strong>Groups:</strong> ${groups.length}</p>
+<p><strong>User ID:</strong> ${userId}</p>
+<p><strong>Created:</strong> ${accountAge.created}</p>
+<p><strong>Account Age:</strong> ${accountAge.ageText}</p>
+<p><strong>Groups:</strong> ${groups.length}</p>
 
         ${renderFlags(flags)}
       </div>
@@ -119,4 +123,24 @@ function renderFlags(flags) {
 
   html += `</div>`;
   return html;
+}
+async function getUserInfo(userId) {
+  const res = await fetch(`https://users.roblox.com/v1/users/${userId}`);
+  return await res.json();
+}
+
+function calculateAccountAge(createdDate) {
+  const created = new Date(createdDate);
+  const now = new Date();
+
+  const diffTime = now - created;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  const years = Math.floor(diffDays / 365);
+  const months = Math.floor((diffDays % 365) / 30);
+
+  return {
+    created: created.toDateString(),
+    ageText: `${years} year(s), ${months} month(s)`
+  };
 }

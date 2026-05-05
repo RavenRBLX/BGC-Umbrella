@@ -1,2 +1,2 @@
 # BGC-Umbrella
-Your friendly neighborhood Roblox account background check bot!
+BGC-Umbrella is a bot created for the sole purpose of background checks. This website/bot uses public Roblox API to check the account.
